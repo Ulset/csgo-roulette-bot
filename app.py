@@ -8,12 +8,12 @@ MAX_LOSS_IN_ROW = 5
 
 
 def calculate_bet(total_money, max_loss):
-    return (total_money / (2 ** max_loss)) / 2
+    return round((total_money / (2 ** max_loss)) / 2, 2)
 
 
 money = start_money
 bet = calculate_bet(money, MAX_LOSS_IN_ROW)
-chance_of_failure = 0.5**MAX_LOSS_IN_ROW
+chance_of_failure = 0.5 ** MAX_LOSS_IN_ROW
 print(f"Startet med {money} i kapital. Max antall tap før konkurs: {MAX_LOSS_IN_ROW}({chance_of_failure}% sjanse)")
 while True:
     if money < 0:
