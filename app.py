@@ -26,6 +26,7 @@ while True:
     while float(rw.get_timer()) > 1.5:
         pass
 
+    money = round(money, 2)
     # Returns left of right based on what is least betted on
     choosed_side = rw.get_least_betted_side()
     print(f"Satser {bet} på {choosed_side}")
