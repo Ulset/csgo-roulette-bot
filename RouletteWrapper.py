@@ -22,31 +22,39 @@ class RouletteWrapper:
         self.timerEl = self.driver.find_element_by_xpath(
             "//*[@id='page-scroll']/div[1]/div/div/div[2]/div[3]/div/div[2]")
 
+    def wait_for_timer(self, timer_value: float):
+        timer_value_now = float(self.get_timer())
+        if timer_value_now > timer_value:
+            time.sleep(timer_value_now - timer_value)
+
     def get_current_holding(self):
         # Gets the users current money
         elem = self.driver.find_element_by_xpath(
             "//*[@id='app']/div[1]/div[2]/div[1]/div/div[3]/div[2]/div[3]/div/div/span/span")
         return float(elem.get_attribute("innerHTML"))
 
-    def get_least_betted_side(self):
+    def get_bet_side(self):
         left_side_amount = float(self.driver.find_element_by_xpath(
             "//*[@id='page-scroll']/div[1]/div/div/div[6]/div[1]/div/div[1]/div[2]/span").get_attribute(
-            "innerHTML").replace(",", "."))
+            "innerHTML").replace(",", ".").replace("1&nbsp;", ""))
         right_side_amount = float(self.driver.find_element_by_xpath(
             "//*[@id='page-scroll']/div[1]/div/div/div[6]/div[3]/div/div[1]/div[2]/span").get_attribute(
-            "innerHTML").replace(",", "."))
-        if left_side_amount < right_side_amount:
+            "innerHTML").replace(",", ".").replace("1&nbsp;", ""))
+        if left_side_amount * 2 < right_side_amount:
             return "Left"
-        else:
+        elif right_side_amount * 2 < left_side_amount:
             return "Right"
+        else:
+            return None
 
     def get_timer(self):
         return self.timerEl.get_attribute("innerHTML").replace(",", ".")
 
     def get_winner(self):
-        while float(self.get_timer()) < 20:
+        self.wait_for_timer(0)
+        while float(self.get_timer()) == 0:
             # Waits for the next rund to start to find winnder
-            pass
+            time.sleep(0.5)
         last_win_el = self.driver.find_element_by_xpath(
             "//*[@id='page-scroll']/div[1]/div/div/div[3]/div/div[1]/div[2]/div[10]/div")
         class_list = last_win_el.get_attribute("className").split(" ")
